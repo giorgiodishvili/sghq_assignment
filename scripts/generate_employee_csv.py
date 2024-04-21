@@ -1,8 +1,10 @@
 # helper script to generate_employees
-# run instruction python3 scripts/generate_employee_csv.py;
+# run instruction python3 scripts/generate_employee_csv.py ${amount}
 #!/usr/bin/python3
 import csv
 import random
+import sys
+import os
 
 class Employee:
     def __init__(self, emp_id, first_name, last_name, salary=None, manager_id=None):
@@ -42,12 +44,13 @@ def generate_employees(num_employees):
 
     return employees
 
-def write_employees_to_csv(employees, filename='employee.csv'):
+def write_employees_to_csv(employees, filename='scripts/employee.csv'):
     with open(filename, mode='w', newline='') as file:
         writer = csv.writer(file)
         writer.writerow(['Id', 'firstName', 'lastName', 'salary', 'managerId'])
         for emp in employees:
             writer.writerow([emp.emp_id, emp.first_name, emp.last_name, emp.salary, emp.manager_id or ""])
+        print("Absolute Path: ", os.path.abspath(filename))
 
-employees = generate_employees(100_000)
+employees = generate_employees(int(sys.argv[1]))
 write_employees_to_csv(employees)
