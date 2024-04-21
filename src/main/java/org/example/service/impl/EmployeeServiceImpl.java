@@ -9,7 +9,6 @@ import org.example.model.Employee;
 import org.example.repository.EmployeeRepository;
 import org.example.service.EmployeeService;
 import org.example.sort.EmployeeSort;
-import org.example.sort.impl.EmployeeManagerHierarchySort;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,13 +20,15 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
-    private final EmployeeSort employeeSortByDepth = EmployeeManagerHierarchySort.getInstance();
+    private final EmployeeSort employeeSortByDepth;
 
 
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository,
-                               EmployeeMapper employeeMapper) {
+    public EmployeeServiceImpl(final EmployeeRepository employeeRepository,
+                               final EmployeeMapper employeeMapper,
+                               final EmployeeSort employeeSortByDepth) {
         this.employeeRepository = employeeRepository;
         this.employeeMapper = employeeMapper;
+        this.employeeSortByDepth = employeeSortByDepth;
     }
 
     @Override

@@ -2,6 +2,7 @@ package org.example.factory.impl;
 
 import org.example.factory.EmployeeRepositoryFactory;
 import org.example.factory.EmployeeServiceFactory;
+import org.example.factory.EmployeeSortFactory;
 import org.example.factory.enums.DbType;
 import org.example.mapper.EmployeeMapper;
 import org.example.service.EmployeeService;
@@ -25,8 +26,11 @@ public class DefaultEmployeeServiceFactory implements EmployeeServiceFactory {
         final EmployeeRepositoryFactory repositoryFactory =
                 DefaultEmployeeRepositoryFactory.getInstance();
 
+        final EmployeeSortFactory employeeSortFactory =
+                DefaultEmployeeSortFactory.getInstance();
+
         return new EmployeeServiceImpl(repositoryFactory.getRepository(dbType),
-                EmployeeMapper.getInstance());
+                EmployeeMapper.getInstance(), employeeSortFactory.createEmployeeSort());
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.example.repository.EmployeeRepository;
 import org.example.repository.impl.InMemoryEmployeeRepository;
 import org.example.service.EmployeeService;
 import org.example.service.impl.EmployeeServiceImpl;
+import org.example.sort.impl.EmployeeManagerHierarchySort;
 import org.example.util.BuilderUtils;
 
 import java.math.BigDecimal;
@@ -35,7 +36,7 @@ public class EmployeeServiceTest
         super(testName);
         this.repository = InMemoryEmployeeRepository.getInstance();
         this.employeeService =
-                new EmployeeServiceImpl(repository, EmployeeMapper.getInstance());
+                new EmployeeServiceImpl(repository, EmployeeMapper.getInstance(), EmployeeManagerHierarchySort.getInstance());
     }
 
     /**
