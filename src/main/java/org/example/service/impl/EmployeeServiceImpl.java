@@ -8,12 +8,12 @@ import org.example.mapper.EmployeeMapper;
 import org.example.model.Employee;
 import org.example.repository.EmployeeRepository;
 import org.example.service.EmployeeService;
+import org.example.sort.EmployeeSort;
 import org.example.sort.impl.EmployeeManagerHierarchySort;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,6 +21,8 @@ import java.util.Optional;
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final EmployeeSort employeeSortByDepth = EmployeeManagerHierarchySort.getInstance();
+
 
     public EmployeeServiceImpl(EmployeeRepository employeeRepository,
                                EmployeeMapper employeeMapper) {
@@ -47,23 +49,14 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     @Override
     public void saveAll(final List<EmployeeDto> employeeDtos) {
-        EmployeeManagerHierarchySort.getInstance().sort(employeeDtos).forEach(this::save);
+        employeeSortByDepth.sort(employeeDtos)
+                .forEach(this::save);
     }
 
     private Employee map(EmployeeDto employeeDto) {
         final Optional<Employee> managerOptional =
                 employeeDto.managerId().map(employeeRepository::getById);
-
-        final Employee employee = employeeMapper.map(employeeDto, managerOptional.orElse(null));
-
-        if (managerOptional.isPresent()) {
-            final var manager = managerOptional.get();
-            if (manager.getSubordinateEmployees() == null) {
-                manager.setSubordinateEmployees(new HashSet<>());
-            }
-            manager.getSubordinateEmployees().add(employee);
-        }
-        return employee;
+        return employeeMapper.map(employeeDto, managerOptional.orElse(null));
     }
 
     /**
